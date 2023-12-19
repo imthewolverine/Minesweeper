@@ -16,7 +16,7 @@ void AssignDrawMap(signed char YSize, signed char XSize, signed char bombs){
 
     map = (Cell*)malloc(sizeof(Cell)*(ySize * xSize));
     for (int i = 0; i < ySize*xSize; i++) map[i].kind = EMPTY;
-    /*Setting bombs*/
+    //bomb bairluulah
     signed char randomY;
     signed char randomX;
     for (int i = 0; i<bombs;){
@@ -29,7 +29,7 @@ void AssignDrawMap(signed char YSize, signed char XSize, signed char bombs){
             i++;
         }
     }
-	/*counting the surrounded bombs around each cell*/
+	/*hajuud bga bombiig tooloh*/
     Cell* cell;
     signed char n = 0;
     for (signed char y = 0; y < ySize; y++)
@@ -121,7 +121,7 @@ void Player(signed char bombs){
                 OpenCells(player.y,player.x);
                 if (GetCell(player.y,player.x)->kind == BOMB){
                     GetCell(player.y,player.x)->state = BombHit;
-                    sPrint(ySize+2,Max(xSize/2 - 5,0),"Game Over!");
+                    sPrint(ySize/2+1,10,"Game Over!");
                     gameover = true;
                 }
                 break;
@@ -141,7 +141,7 @@ void Player(signed char bombs){
             case 'l': PrintMap(true); return;
         }
         if (bombsFlagged == bombs && flagged == bombs && questioned == 0){
-            sPrint(ySize+2,Max(xSize/2 - 5,0)," Game Won!");
+            sPrint(ySize+2, 10," Game Won!");
             gameover = true;
         }
         showMap == false ? PrintCell(tempy,tempx) : Print(GetCell(tempy,tempx)->object);

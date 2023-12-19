@@ -1,8 +1,5 @@
 #include "External.h"
 
-int Max(int n1,int n2){
-   return n1 > n2 ? n1 : n2;
-}
 
 void ShowsCursor(bool visible){
    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);

@@ -17,6 +17,6 @@ int main(){
     free(map);
     map = NULL;
 
-    sPrint(ylength+5,Max(xlength/2 - 10,0),"Thanks for playing!");
+    sPrint(ylength+6,2,"Thanks for playing!");
     return 0;
 }
