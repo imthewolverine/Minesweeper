@@ -1,6 +1,6 @@
 #include "Map.h"
 
-static uint8_t ySize,xSize;
+static unsigned char ySize,xSize;
 Cell* map;
 
 void PrintMap(bool show){
@@ -11,29 +11,29 @@ void PrintMap(bool show){
     }
 }
 
-void AssignDrawMap(int8_t YSize, int8_t XSize, int8_t bombs){
+void AssignDrawMap(signed char YSize, signed char XSize, signed char bombs){
     ySize = YSize; xSize = XSize;
 
     map = (Cell*)malloc(sizeof(Cell)*(ySize * xSize));
     for (int i = 0; i < ySize*xSize; i++) map[i].kind = EMPTY;
     /*Setting bombs*/
-    int8_t randomY;
-    int8_t randomX;
+    signed char randomY;
+    signed char randomX;
     for (int i = 0; i<bombs;){
         randomY = rand() % ySize;
         randomX = rand() % xSize;
 
         if (GetCell(randomY,randomX)->kind != BOMB){
             GetCell(randomY,randomX)->kind = BOMB;
-            GetCell(randomY,randomX)->object = (Object){MAGENTA,'X',randomY,randomX};
+            GetCell(randomY,randomX)->object = (Object){'X',randomY,randomX};
             i++;
         }
     }
 	/*counting the surrounded bombs around each cell*/
     Cell* cell;
-    int8_t n = 0;
-    for (int8_t y = 0; y < ySize; y++)
-        for (int8_t x = 0; x < xSize; x++){
+    signed char n = 0;
+    for (signed char y = 0; y < ySize; y++)
+        for (signed char x = 0; x < xSize; x++){
             GetCell(y,x)->state = Closed;
             if (GetCell(y,x)->kind != BOMB){
                 if (isCellBomb(y+1,x)) n++;
@@ -52,11 +52,10 @@ void AssignDrawMap(int8_t YSize, int8_t XSize, int8_t bombs){
                 n = 0;
             }
         }
-    PrintBombsLeft(bombs,0);
     PrintMap(false);
 }
 
-void OpenCells(int8_t y, int8_t x){
+void OpenCells(signed char y, signed char x){
     if (GetCell(y,x)->kind != EMPTY) return;
     TryOpen(y+1,x);
     TryOpen(y,x+1);
@@ -68,7 +67,7 @@ void OpenCells(int8_t y, int8_t x){
     TryOpen(y+1,x+1);
 }
 
-void TryOpen(int8_t y, int8_t x){
+void TryOpen(signed char y, signed char x){
     Cell *cell;
     if (!isOutside(y,x)) {
         cell = GetCell(y,x);
@@ -80,87 +79,69 @@ void TryOpen(int8_t y, int8_t x){
     }
 }
 
-void AssignCell(int8_t n, int8_t y, int8_t x){
+void AssignCell(signed char n, signed char y, signed char x){
     Cell* cell = GetCell(y,x);
     switch (n){
-        case 0: cell->kind = EMPTY; cell->object = (Object){WHITE,' ',y,x}; break;
-        case 1: cell->kind = ONE; cell->object = (Object){BLUE,'1',y,x}; break;
-        case 2: cell->kind = TWO; cell->object = (Object){GREEN,'2',y,x}; break;
-        case 3: cell->kind = THREE; cell->object = (Object){RED,'3',y,x}; break;
-        case 4: cell->kind = FOUR; cell->object = (Object){DARKBLUE,'4',y,x}; break;
-        case 5: cell->kind = FIVE; cell->object = (Object){DARKRED,'5',y,x}; break;
-        case 6: cell->kind = SIX; cell->object = (Object){CYAN,'6',y,x}; break;
-        case 7: cell->kind = SEVEN; cell->object = (Object){BLACK,'7',y,x}; break;
-        case 8: cell->kind = EIGHT; cell->object = (Object){GRAY,'8',y,x}; break;
+        case 0: cell->kind = EMPTY; cell->object = (Object){' ',y,x}; break;
+        case 1: cell->kind = ONE; cell->object = (Object){'1',y,x}; break;
+        case 2: cell->kind = TWO; cell->object = (Object){'2',y,x}; break;
+        case 3: cell->kind = THREE; cell->object = (Object){'3',y,x}; break;
+        case 4: cell->kind = FOUR; cell->object = (Object){'4',y,x}; break;
+        case 5: cell->kind = FIVE; cell->object = (Object){'5',y,x}; break;
+        case 6: cell->kind = SIX; cell->object = (Object){'6',y,x}; break;
+        case 7: cell->kind = SEVEN; cell->object = (Object){'7',y,x}; break;
+        case 8: cell->kind = EIGHT; cell->object = (Object){'8',y,x}; break;
     }
 }
 
-Cell* GetCell(int8_t y, int8_t x){
+Cell* GetCell(signed char y, signed char x){
     return &map[x+y * xSize];
 }
 
-bool isCellBomb(int8_t y, int8_t x){
+bool isCellBomb(signed char y, signed char x){
     if (isOutside(y,x)) return false;
     return (GetCell(y,x)->kind == BOMB);
 }
 
-void Player(int8_t bombs){
-    Object player = (Object){DARKMAGENTA,'P',0,0};
+void Player(signed char bombs){
+    Object player = (Object){'P',0,0};
     int tempy = 0,tempx = 0;
     bool gameover = false;
     bool showMap = false;
-    int16_t flagged = 0;
-	int8_t bombsFlagged = 0, questioned = 0;
+    short flagged = 0;
+	signed char bombsFlagged = 0, questioned = 0;
 	while (!gameover){
         switch (getch()){
-            case 'w': case 'W': if (!isOutside(player.y-1,player.x)) player.y--; break;
-            case 's': case 'S': if (!isOutside(player.y+1,player.x)) player.y++; break;
-            case 'd': case 'D': if (!isOutside(player.y,player.x+1)) player.x++; break;
-            case 'a': case 'A': if (!isOutside(player.y,player.x-1)) player.x--; break;
-            case 'o': case 'O': //open cell
+            case 'w': if (!isOutside(player.y-1,player.x)) player.y--; break;
+            case 's': if (!isOutside(player.y+1,player.x)) player.y++; break;
+            case 'd': if (!isOutside(player.y,player.x+1)) player.x++; break;
+            case 'a': if (!isOutside(player.y,player.x-1)) player.x--; break;
+            case 'o': //open
                 GetCell(player.y,player.x)->state = Open;
                 OpenCells(player.y,player.x);
                 if (GetCell(player.y,player.x)->kind == BOMB){
                     GetCell(player.y,player.x)->state = BombHit;
-                    sPrint(ySize+2,Max(xSize/2 - 5,0),"Game Over!",DARKRED);
+                    sPrint(ySize+2,Max(xSize/2 - 5,0),"Game Over!");
                     gameover = true;
                 }
                 break;
-            case 'f': case 'F': //flag the cell
+            case 'f':// flag
                 if (GetCell(player.y,player.x)->state == Open) break;
-                if (GetCell(player.y,player.x)->state == Questioned) questioned--;
-
                 if (GetCell(player.y,player.x)->state == Flagged){
                     flagged--;
-                    PrintBombsLeft(bombs,flagged);
                     GetCell(player.y,player.x)->state = Closed;
                     if (GetCell(player.y,player.x)->kind == BOMB) bombsFlagged--;
                     break;
                 }
                 flagged++;
-                PrintBombsLeft(bombs,flagged);
                 GetCell(player.y,player.x)->state = Flagged;
                 if (GetCell(player.y,player.x)->kind == BOMB) bombsFlagged++;
                 break;
-            case 'q': case 'Q': //set a question to current cell
-                if (GetCell(player.y,player.x)->state == Open) break;
-                if (GetCell(player.y,player.x)->state == Flagged){
-                    if (GetCell(player.y,player.x)->kind == BOMB) bombsFlagged--;
-                    flagged--; PrintBombsLeft(bombs,flagged);
-                }
-                if (GetCell(player.y,player.x)->state == Questioned) {
-                    questioned--;
-                    GetCell(player.y,player.x)->state = Closed;
-                    break;
-                }
-                GetCell(player.y,player.x)->state = Questioned;
-                questioned++;
-                break;
-            case 'c': case 'C': PrintMap(showMap = !showMap); break; //cheat
-            case 'l': case 'L': PrintMap(true); return; //leave
+            //garah
+            case 'l': PrintMap(true); return;
         }
-        if (bombsFlagged == bombs && flagged == bombs && questioned == 0){ //if all bombs flagged, game won
-            sPrint(ySize+2,Max(xSize/2 - 5,0)," Game Won!",DARKGREEN);
+        if (bombsFlagged == bombs && flagged == bombs && questioned == 0){
+            sPrint(ySize+2,Max(xSize/2 - 5,0)," Game Won!");
             gameover = true;
         }
         showMap == false ? PrintCell(tempy,tempx) : Print(GetCell(tempy,tempx)->object);
@@ -170,23 +151,18 @@ void Player(int8_t bombs){
     PrintMap(true);
 }
 
-void PrintBombsLeft(int8_t bombs, int16_t flagged){
-    sPrint(ySize+1,Max(xSize/2 - 6,0),"Bombs Left: ",WHITE);
-    printf("%d ",bombs-flagged);
-}
 
-void PrintCell(int8_t y, int8_t x){
-   Object o = (Object){DARKYELLOW,'#',y,x};
+void PrintCell(signed char y, signed char x){
+   Object o = (Object){'#',y,x};
    switch (GetCell(y,x)->state){
-        case BombHit: o = (Object){DARKMAGENTA ,'X',y,x}; break;
-        case Flagged: o = (Object){DARKRED,'F',y,x}; break;
-        case Questioned: o = (Object){WHITE,'?',y,x}; break;
+        case BombHit: o = (Object){'X',y,x}; break;
+        case Flagged: o = (Object){'F',y,x}; break;
         case Open: o = GetCell(y,x)->object; break;
         default: break;
    }
    Print(o);
 }
 
-bool isOutside(int8_t y, int8_t x){
+bool isOutside(signed char y, signed char x){
    return (y < 0 || y >= ySize || x < 0 || x >= xSize);
 }

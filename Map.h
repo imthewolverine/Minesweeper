@@ -3,11 +3,11 @@
 #include "External.h"
 
 typedef enum CellState{
-    Flagged,Questioned,Open,Closed,WrongBomb,BombHit
+    Flagged, Open, Closed, WrongBomb, BombHit
 }CellState;
 
 typedef enum CellKind{
-    ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,BOMB,EMPTY
+    ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, BOMB, EMPTY
 }CellKind;
 
 typedef struct Cell{
@@ -17,14 +17,13 @@ typedef struct Cell{
 }Cell;
 
 void PrintMap(bool show);
-void AssignDrawMap(int8_t XSize, int8_t YSize, int8_t bombs);
-Cell* GetCell(int8_t y, int8_t x);
-void Player(int8_t bombs);
-bool isOutside(int8_t y, int8_t x);
-bool isCellBomb(int8_t y, int8_t x);
-void AssignCell(int8_t n, int8_t y, int8_t x);
-void OpenCells(int8_t y, int8_t x);
-void TryOpen(int8_t y, int8_t x);
-void PrintBombsLeft(int8_t bombs, int16_t flagged);
-void PrintCell(int8_t y, int8_t x);
+void AssignDrawMap(signed char XSize, signed char YSize, signed char bombs);
+Cell* GetCell(signed char y, signed char x);
+void Player(signed char bombs);
+bool isOutside(signed char y, signed char x);
+bool isCellBomb(signed char y, signed char x);
+void AssignCell(signed char n, signed char y, signed char x);
+void OpenCells(signed char y, signed char x);
+void TryOpen(signed char y, signed char x);
+void PrintCell(signed char y, signed char x);
 #endif
